@@ -1,16 +1,15 @@
-def call() {
-    stage('Checkout') {
-        checkout scm
-    }
+@Library('shared-library') _
 
-    stage('Unit Tests') {
-        echo 'Running unit tests...'
-        sh './gradlew test'
+pipeline {
+    agent any
+    environment {
+        ENVIRONMENT = 'dev'  // or 'staging', 'prod', etc.
     }
-
-    stage('Deploy') {
-        echo "Deploying to ${env.ENVIRONMENT}"
-        // Sample deploy command, can be customized
-        sh "./deploy.sh ${env.ENVIRONMENT}"
+    stages {
+        stage('Common Build') {
+            steps {
+                commonBuild()
+            }
+        }
     }
 }
